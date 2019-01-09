@@ -28,14 +28,14 @@ updateHandler = (e) => {
 }
   render() {
     return (
-      <div>
+      <div className="stockadder">
         <form>
             <input type="text" onChange={this.handleChangeTick} placeholder="Add Asset..." id="stockticker">                                   
             </input>
-            <input type="number" onChange={this.handleChangeVolume}placeholder="Volume..." id="volume">
-            </input>
-            <button type="submit" onClick={this.submitHandler}>Buy</button>
-            <button onClick={this.updateHandler}>Update Portfolio</button>
+            {/*<input type="number" onChange={this.handleChangeVolume}placeholder="Volume..." id="volume">
+            </input>*/}
+            <button type="submit" onClick={this.submitHandler}>Add to watchlist</button>
+            <button onClick={this.updateHandler}>Update watchlist</button>
         </form> 
       </div>
     )
