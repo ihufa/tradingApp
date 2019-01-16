@@ -14,7 +14,8 @@ class App extends React.Component {
             apiData: [],
             stocks: [],
             graphData: [{}],
-            stockDisplay: 0
+            stockDisplay: 0,
+            portfolio: []
             
         }
     }
@@ -41,8 +42,15 @@ class App extends React.Component {
         stockDisplay: this.state.graphData.findIndex(item => item.ticker === stock)
         })
     }
+    handleBuy = (stock) => {
+        this.setState({
+            portfolio: this.state.portfolio.concat(stock)
+        })
+
+    }
 
     updatePortfolio = async() => {
+        this.apiSummary = []
         this.setState({
             apiData: [],
             graphData: [{}]
@@ -63,9 +71,19 @@ class App extends React.Component {
                     })
                 })
             }
+            
             this.setState({                                     // set state after the api calls are all concluded to not set state once for every call
-                graphData: this.apiSummary
+                graphData: this.apiSummary,
+                 
             })
+                let portfolioCopy = [ ...this.state.portfolio ]
+                for (let i = 0; i < this.state.portfolio.length; i++) {
+                    portfolioCopy[i].currentPrice = this.state.graphData[this.state.graphData.findIndex(item => item.ticker === portfolioCopy[i].stock)].prices[99]               }
+                this.setState({
+                    portfolio: portfolioCopy
+                })
+                
+            setInterval(this.updatePortfolio, 64000)
         }
 
         render() { 
@@ -75,11 +93,13 @@ class App extends React.Component {
                         <div className="list-and-graph-wrap">
                             <div className="watchlist-wrap">
                                 <Stockadder addStock={this.addStock} updatePortfolio={this.updatePortfolio} />
-                                < Watchlist stocks={this.state.stocks} watchlist={this.state.graphData} deleteStock={this.deleteStock} showGraph={this.showGraph} />
+                                < Watchlist stocks={this.state.stocks} watchlist={this.state.graphData} deleteStock={this.deleteStock} showGraph={this.showGraph} handleBuy={this.handleBuy} />
                             </div>
                             <div className="chart">
                                 < Graph graphData={this.state.graphData[this.state.stockDisplay]} /> 
                             </div>
+                            <Portfolio portfolio={this.state.portfolio} graphData = {this.state.graphData} handleSell={this.handleSell} />
+                            
                         </div>
                 </div>
                     )

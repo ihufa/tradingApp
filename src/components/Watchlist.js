@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
+import Buy from './modals/buy'
 
 class Watchlist extends Component {
     constructor(props) {
         super(props)
         this.state={
             ticker: '',
-            volume: 0
+            volume: 0,
+            showBuyModal: false,
+
         }
     }
 
@@ -17,8 +20,25 @@ showGraphHandler = (e) => {
   e.preventDefault()
   this.props.showGraph(e.target.id)
 }
+buyHandler = (e) => {
+  e.preventDefault()
+  this.setState({
+    ...this.state, showBuyModal: !this.state.showBuyModal, ticker: e.target.id
+  })
+}
+modalOK = () => {
+  this.setState({
+    showBuyModal: false
+  })
+}
 
   render() {
+    if (this.state.showBuyModal) { return <Buy modalMessage = "Enter Volume" stock = {this.state.ticker} 
+        price = {this.props.watchlist[this.props.watchlist.findIndex(item => item.ticker === this.state.ticker)].prices[99]}
+      time={this.props.watchlist[this.props.watchlist.findIndex(item => item.ticker === this.state.ticker)].times[99]} 
+        handleBuy={this.props.handleBuy} modalOK={this.modalOK}
+        />}
+
     if (Object.keys(this.props.watchlist[0]).length !== 0) {     // dont render if watchlist is empty object
       return (<div>
         <h2>Watchlist</h2>
