@@ -5,7 +5,6 @@ class Buy extends Component {
         super(props)
         this.state = {
             volume: 0,
-            stock: null,
             timeOfPurchase: 0,
             price: 0,
             currentPrice: 0
@@ -14,17 +13,24 @@ class Buy extends Component {
 handleChange = (e) => {
     this.setState({
         volume: e.target.value,
-        stock: this.props.stock,
+        ticker: this.props.ticker,
         timeOfPurchase: this.props.time,
         price: this.props.price,
-        currentPrice: this.props.price
+        currentPrice: this.props.price,
+        currentTime: this.props.price
     })
 }
 
 handleBuy = (e) => {
     e.preventDefault()
-    this.props.handleBuy(this.state)
+    if(this.state.volume > 0) {this.props.handleBuy(this.state)}
     this.props.modalOK()
+}
+handleClose = (e) => {
+    e.preventDefault()
+    console.log(e.target)
+    if(e.target.className !== 'modal')
+   { this.props.handleClose()}
 }
     
   render() {
@@ -41,6 +47,7 @@ handleBuy = (e) => {
         width: '70%'    ,
         height: 150,
         margin: 'auto',
+        marginTop: 250,
         position: 'relative'
       }
       const formStyle = {
@@ -49,12 +56,12 @@ handleBuy = (e) => {
 
 
     return (
-      <div style={backgroundStyle}>
-        <div style={modalStyle}>
-        <h3>{this.props.modalMessage}</h3>
-            <form style={formStyle}>
-                <input onChange={this.handleChange} type="number" placeholder="Volume"></input> <span>{Math.round(this.props.price*this.state.volume)}$</span>
-                <button onClick={this.handleBuy}>Buy</button>
+      <div onClick={this.handleClose} style={backgroundStyle}>
+        <div className="modal" style={modalStyle}>
+        <h3 className="modal">{this.props.modalMessage}</h3>
+                <form className="modal" style={formStyle}><span>{this.props.ticker}</span>
+                    <input className="modal" onChange={this.handleChange} type="number" placeholder="Volume"></input> <span className="modal">{Math.round(this.props.price*this.state.volume)}$</span>
+                <button className="modal" onClick={this.handleBuy}>Buy</button>
             </form>
         </div>
       </div>
